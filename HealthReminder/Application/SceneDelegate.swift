@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  HealthReminder
-//
-//  Created by Данил Забинский on 10.06.2025.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -15,7 +8,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = UIViewController()
+        
+        let diContainer = DIContainer()
+        let remindsAssembly = RemindsAssembly(container: diContainer)
+        let remindsNavigationController = UINavigationController(
+            rootViewController: remindsAssembly.resolveRemindsModule()
+        )
+        window?.rootViewController = remindsNavigationController
         window?.makeKeyAndVisible()
     }
 
