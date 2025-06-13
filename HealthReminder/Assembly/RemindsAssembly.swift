@@ -23,8 +23,8 @@ final class RemindsAssembly: IRemindsAssembly {
         else {
             fatalError(.registerModulesFirst)
         }
-        remindsRouter.presenter = remindsPresenter
         remindsInteractor.presenter = remindsPresenter
+        remindsRouter.controller = remindsController
         remindsPresenter.controller = remindsController
         guard
             let controller = remindsController as? UIViewController
@@ -38,8 +38,17 @@ final class RemindsAssembly: IRemindsAssembly {
 private extension RemindsAssembly {
     
     func registerModules() {
-        
-        container.register(type: IRemindsRouter.self, service: RemindsRouter())
+        container.register(type: ExpandedStateManager.self, service: ExpandedStateManager())
+        container.register(type: SheetOpenerManager.self, service: SheetOpenerManager())
+        guard
+            let expandedStateManager = container.resolve(type: ExpandedStateManager.self),
+            let sheetOpenerManager = container.resolve(type: SheetOpenerManager.self)
+        else {
+            fatalError(.shoutdRegisterManagersFirst)
+        }
+        container.register(type: IRemindsRouter.self, service: RemindsRouter(
+            expandedStateManager: expandedStateManager, sheetOpenerManager: sheetOpenerManager)
+        )
         container.register(type: IRemindsInteractor.self, service: RemindsInteractor())
         guard
             let router = container.resolve(type: IRemindsRouter.self),
@@ -62,6 +71,7 @@ private extension RemindsAssembly {
 
 private extension String {
     
+    static let shoutdRegisterManagersFirst = "Ошибка регистрации менеджеров"
     static let downcastExeption = "Ошибка преобразования типа проверьте зарегистрированные модули"
     static let registerModulesFirst = "Модуль не был зарегистрирован в момент resolve"
     static let shouldRegisterRouterInteractor = "Моудули роутера и интерактора не были зарегистрированы в котейнере"

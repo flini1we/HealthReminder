@@ -5,6 +5,7 @@ protocol IRemindsPresenter: AnyObject {
     var controller: IRemindsView? { get set }
     
     func viewDidLoad()
+    func createButtonDidTap()
 }
 
 final class RemindsPresenter {
@@ -22,6 +23,16 @@ final class RemindsPresenter {
 extension RemindsPresenter: IRemindsPresenter {
     
     func viewDidLoad() {
-        print("controller loaded view start load data")
+        Task {
+            let reminds = await remindsInteractor.loadReminds()
+            
+            await MainActor.run {
+                controller?.remindsDidLoad(reminds)
+            }
+        }
+    }
+    
+    func createButtonDidTap() {
+        remindsRouter.showCreateScreen()
     }
 }
