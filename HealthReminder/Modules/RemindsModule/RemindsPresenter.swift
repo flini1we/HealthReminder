@@ -71,7 +71,10 @@ extension RemindsPresenter: IRemindsPresenter {
     
     func onRemindDidTap(at index: Int) {
         let remind = remindsInteractor.reminds[index]
-        remindsRouter.showDetailScreen(for: remind)
+        guard
+            let remindDetailDeeplink = remindsRouter.createDetailDeepLinkURL(for: remind)
+        else { return }
+        UIApplication.shared.open(remindDetailDeeplink)
     }
 }
 

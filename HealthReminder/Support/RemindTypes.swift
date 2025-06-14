@@ -1,6 +1,6 @@
 import Foundation
 
-enum RemindType: String, CaseIterable, Identifiable {
+enum RemindType: String, CaseIterable, Identifiable, Codable {
     
     case drinkWater
     case stretch

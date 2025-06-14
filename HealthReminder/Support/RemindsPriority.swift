@@ -1,6 +1,6 @@
 import UIKit
 
-enum RemindsPriority: String, CaseIterable {
+enum RemindsPriority: String, CaseIterable, Codable {
     
     case all = "All"
     case important = "Important"

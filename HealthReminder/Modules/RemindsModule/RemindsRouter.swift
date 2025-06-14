@@ -7,7 +7,7 @@ protocol IRemindsRouter: AnyObject {
     var controller: IRemindsView? { get set }
     
     func showCreateScreen(remindService: IRemindService)
-    func showDetailScreen(for remind: Remind)
+    func createDetailDeepLinkURL(for remind: Remind) -> URL?
 }
 
 final class RemindsRouter: NSObject {
@@ -59,10 +59,8 @@ extension RemindsRouter: IRemindsRouter {
         presentingController.present(createRemindController, animated: true)
     }
     
-    func showDetailScreen(for remind: Remind) {
-        let remindDetailController = UIHostingController(rootView: RemindDetailView(remind: remind))
-        guard let presentingController = controller as? UIViewController else { return }
-        presentingController.navigationController?.pushViewController(remindDetailController, animated: true)
+    func createDetailDeepLinkURL(for remind: Remind) -> URL? {
+        DeeplinkRemindDetailBuilder().buildDeeplink(for: remind)
     }
 }
 

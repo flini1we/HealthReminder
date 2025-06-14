@@ -1,6 +1,6 @@
 import Foundation
 
-struct Remind: Identifiable, Hashable {
+struct Remind: Identifiable, Hashable, Codable {
     
     let id: UUID = .init()
     var title: String
