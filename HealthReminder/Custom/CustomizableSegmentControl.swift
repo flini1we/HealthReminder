@@ -4,6 +4,7 @@ final class CustomizableSegmentControl: UISegmentedControl {
     
     lazy var radius = bounds.height / 2
     
+    private var lastSelectedIndex: Int = -1
     private let segmentIcons = RemindsPriority.allCases.map { $0.image }
     private let segmentTitles = RemindsPriority.allCases.map { $0.rawValue }
     
@@ -29,15 +30,17 @@ final class CustomizableSegmentControl: UISegmentedControl {
         layer.masksToBounds = true
         
         let selectedImageViewIndex = numberOfSegments
-        if let selectedImageView = subviews[selectedImageViewIndex] as? UIImageView {
-            selectedImageView.backgroundColor = .systemBackground
-            selectedImageView.image = nil
-            
-            selectedImageView.bounds = selectedImageView.bounds.insetBy(dx: segmentInset, dy: segmentInset)
-            selectedImageView.layer.cornerRadius = radius
-            selectedImageView.clipsToBounds = true
-            
-            selectedImageView.layer.removeAnimation(forKey: .boundsAnimationKey)
+        if selectedSegmentIndex != -1 {
+            if let selectedImageView = subviews[selectedImageViewIndex] as? UIImageView {
+                selectedImageView.backgroundColor = .systemBackground
+                selectedImageView.image = nil
+                
+                selectedImageView.bounds = selectedImageView.bounds.insetBy(dx: segmentInset, dy: segmentInset)
+                selectedImageView.layer.cornerRadius = radius
+                selectedImageView.clipsToBounds = true
+                
+                selectedImageView.layer.removeAnimation(forKey: .boundsAnimationKey)
+            }
         }
     }
 }

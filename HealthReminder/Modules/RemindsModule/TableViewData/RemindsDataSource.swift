@@ -10,11 +10,6 @@ final class RemindsDataSource: NSObject {
     private var dataSource: UITableViewDiffableDataSource<RemindsSections, Remind>?
     private weak var tableView: UITableView?
     
-    override init() {
-        dataSource?.defaultRowAnimation = .fade
-        super.init()
-    }
-    
     func setupWithTable(tableView: UITableView, reminds: [Remind]) {
         self.tableView = tableView
         dataSource = .init(
@@ -27,11 +22,16 @@ final class RemindsDataSource: NSObject {
                 return cell
             }
         )
+        dataSource?.defaultRowAnimation = .fade
         applyFreshSnapshot(with: reminds)
     }
     
     func updateData(_ reminds: [Remind]) {
         applyFreshSnapshot(with: reminds)
+    }
+    
+    func addRemind(_ remind: Remind) {
+        addElement(remind)
     }
 }
 
@@ -41,6 +41,18 @@ private extension RemindsDataSource {
         var snapshot = NSDiffableDataSourceSnapshot<RemindsSections, Remind>()
         snapshot.appendSections([.main])
         snapshot.appendItems(reminds)
+        dataSource?.apply(snapshot)
+    }
+    
+    func addElement(_ remin: Remind) {
+        guard var snapshot = dataSource?.snapshot() else { return }
+        let reminds = snapshot.itemIdentifiers(inSection: .main)
+        if !reminds.isEmpty {
+            if reminds[0].priority != remin.priority {
+                return
+            }
+        }
+        snapshot.appendItems([remin], toSection: .main)
         dataSource?.apply(snapshot)
     }
 }

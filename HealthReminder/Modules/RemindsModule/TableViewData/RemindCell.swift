@@ -8,7 +8,7 @@ final class RemindCell: UITableViewCell {
     
     private lazy var bgView: UIView = {
         let view = UIView().autoLayout()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGray6
         view.layer.cornerRadius = .Padding.normal
         view.addShadow(
             opacity: 0.1,
@@ -19,12 +19,25 @@ final class RemindCell: UITableViewCell {
         return view
     }()
     
-    private lazy var remindImageView: UIImageView = {
+    private lazy var remindImage: UIImageView = {
         let imageView = UIImageView().autoLayout()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .systemBlue
+        imageView.tintColor = .baseBG
+        imageView.addGlow(color: .baseBG)
         imageView.image = UIImage(systemName: "bell.fill")
         return imageView
+    }()
+    
+    private lazy var remindImageView: UIView = {
+        let view = UIView().autoLayout()
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = .Padding.small
+        view.addSubview(remindImage)
+        NSLayoutConstraint.activate([
+            remindImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            remindImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        return view
     }()
     
     private lazy var remindTitle: UILabel = {
@@ -73,8 +86,9 @@ final class RemindCell: UITableViewCell {
     }
     
     func setupWithRemind(_ remind: Remind) {
+        remindImage.image = UIImage(systemName: remind.category.systemIcon)!
         remindTitle.text = remind.title
-        timeLabel.text = DateFormatter.standard.formatRelative(.now)
+        timeLabel.text = remind.createdAt
     }
 }
 
@@ -95,5 +109,14 @@ private extension RemindCell {
     func setupConstraints() {
         bgView.pinEdges(inset: .Padding.small, for: [.top, .bottom])
         dataStackView.pinEdges(inset: .Padding.normal)
+        
+        let remindImageViewWidth = self.bounds.height
+        NSLayoutConstraint.activate([
+            remindImageView.widthAnchor.constraint(equalToConstant: remindImageViewWidth),
+            remindImageView.heightAnchor.constraint(equalToConstant: remindImageViewWidth),
+            
+            remindImage.heightAnchor.constraint(equalToConstant: remindImageViewWidth * 0.7),
+            remindImage.widthAnchor.constraint(equalToConstant: remindImageViewWidth * 0.7)
+        ])
     }
 }

@@ -7,10 +7,14 @@ struct CreateRemindView: View {
     
     @StateObject private var viewModel = CreateRemindViewModel()
     @FocusState private var isFocused: Bool
+    @Environment(\.dismiss) var dismiss
     
-    init(expandedStateManager: ExpandedStateManager, sheetOpenerManager: SheetOpenerManager) {
+    private let remindService: IRemindService
+    
+    init(expandedStateManager: ExpandedStateManager, sheetOpenerManager: SheetOpenerManager, remindService: IRemindService) {
         self.expandedStateManager = expandedStateManager
         self.sheetOpenerManager = sheetOpenerManager
+        self.remindService = remindService
     }
     
     var body: some View {
@@ -21,13 +25,9 @@ struct CreateRemindView: View {
                 ExpandedIndicator(isExpanded: isExpanded)
                 
                 ZStack {
-                    Color.white
+                    Color.white.ignoresSafeArea()
                     
-                    VStack {
-                        ScreenView(isExpanded: isExpanded)
-                        
-                        Spacer()
-                    }
+                    ScreenView(isExpanded: isExpanded)
                 }
             }
         }
@@ -36,76 +36,87 @@ struct CreateRemindView: View {
             sheetOpenerManager.couldOpen = false
             viewModel.remindTitle = ""
         }
-        .ignoresSafeArea()
     }
     
     @ViewBuilder
     func ScreenView(isExpanded: Bool) -> some View {
-        if isExpanded {
-            VStack {
-                HStack {
-                    Text(viewModel.remindTitle)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                    
-                    RemindTypeMenu(selectedType: $viewModel.selectedType)
-                        .padding(.horizontal)
-                    
-                    Spacer()
-                }
-                .padding()
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Remind me")
-                            .fontWeight(.regular)
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                        
-                        Text(viewModel.intervalText)
+        VStack {
+            if isExpanded {
+                VStack {
+                    HStack {
+                        Text(viewModel.remindTitle)
+                            .font(.title)
                             .fontWeight(.semibold)
-                            .font(.title3)
+                        
+                        RemindTypeMenu(selectedType: $viewModel.selectedType)
+                            .padding(.horizontal)
+                        
+                        Spacer()
                     }
-                    .padding(.vertical)
+                    .padding()
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(verbatim: .remindIntervalTitle)
+                                .fontWeight(.regular)
+                                .font(.title3)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(viewModel.intervalText)
+                                .fontWeight(.semibold)
+                                .font(.title3)
+                        }
+                        .padding(.vertical)
+                        
+                        Spacer()
+                        
+                        Stepper("", value: $viewModel.interval, in: 1...24)
+                            .labelsHidden()
+                    }
+                    .animation(.spring, value: viewModel.interval)
+                    .padding(.horizontal)
+                    
+                    RemindPrioritySegment(selectedPriority: $viewModel.remindPriority)
                     
                     Spacer()
                     
-                    Stepper("", value: $viewModel.interval, in: 1...24)
-                        .labelsHidden()
+                    Button {
+                        remindService.appendRemind(viewModel.buildRemind())
+                        dismiss()
+                    } label: {
+                        Text("Create \(viewModel.remindPriority.embend) remind")
+                            .foregroundStyle(.black)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: .Padding.normal)
+                                    .fill(.baseBG)
+                                    .shadow(color: .baseBG, radius: .Padding.small, x: 2, y: 2)
+                            )
+                    }
+                    .animation(.smooth, value: viewModel.remindPriority)
+                    .padding(.horizontal)
+                    .padding(.bottom, .Padding.medium)
                 }
-                .animation(.spring, value: viewModel.interval)
-                .padding(.horizontal)
-                
-                Spacer()
-                
-                Button {
-                    print(1)
-                } label: {
-                    Text("Create remind")
-                        .foregroundStyle(.black)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: .Padding.normal)
-                                .fill(.baseBG)
-                                .shadow(color: .baseBG, radius: .Padding.small, x: 2, y: 2)
-                        )
+            } else {
+                TextField(
+                    String.createRemindTextFieldPlaceholder,
+                    text: $viewModel.remindTitle
+                )
+                .modifier(remindTitleTextFieldModifier())
+                .focused($isFocused)
+                .padding()
+                .onChange(of: viewModel.isTextFieldEmpty) { _, newValue in
+                    sheetOpenerManager.couldOpen = !newValue
                 }
-                .padding(.horizontal)
-                .padding(.bottom, .Padding.medium)
+                .onChange(of: isFocused) { _, isEditing in
+                    if isEditing {
+                        // TODO: Keyboard
+                    }
+                }
             }
-        } else {
-            TextField(
-                String.createRemindTextFieldPlaceholder,
-                text: $viewModel.remindTitle
-            )
-            .modifier(remindTitleTextFieldModifier())
-            .focused($isFocused)
-            .padding()
-            .onChange(of: viewModel.isTextFieldEmpty) { _, newValue in
-                sheetOpenerManager.couldOpen = !newValue
-            }
+            Spacer()
         }
     }
     
@@ -171,12 +182,50 @@ struct CreateRemindView: View {
                 }
         }
     }
+    
+    private struct RemindPrioritySegment: View {
+        
+        @Binding var selectedPriority: RemindsPriority
+        @Namespace private var namespace
+        
+        var body: some View {
+            HStack(spacing: 0) {
+                ForEach(RemindsPriority.allCases, id: \.self) { priority in
+                    ZStack {
+                        if selectedPriority == priority {
+                            Capsule()
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                                .matchedGeometryEffect(id: "selectedTab", in: namespace)
+                        }
+                        
+                        Text(priority.rawValue)
+                            .foregroundStyle(selectedPriority == priority ? .black : .gray)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                    }
+                    .onTapGesture {
+                        selectedPriority = priority
+                    }
+                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedPriority)
+                }
+            }
+            .padding(2.5)
+            .background(
+                Capsule()
+                    .fill(Color(.systemGray6))
+            )
+            .padding()
+        }
+    }
 }
 
 private extension String {
     
     static let creteRemindTitle = "Create remind for you"
     static let createRemindTextFieldPlaceholder = "Create yout remind"
+    static let remindIntervalTitle = "Remind me"
     
     enum indicator {
         case title(Bool)

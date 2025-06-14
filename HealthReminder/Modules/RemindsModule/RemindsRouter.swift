@@ -6,7 +6,7 @@ protocol IRemindsRouter: AnyObject {
     
     var controller: IRemindsView? { get set }
     
-    func showCreateScreen()
+    func showCreateScreen(remindService: IRemindService)
 }
 
 final class RemindsRouter: NSObject {
@@ -32,11 +32,12 @@ final class RemindsRouter: NSObject {
 
 extension RemindsRouter: IRemindsRouter {
     
-    func showCreateScreen() {
+    func showCreateScreen(remindService: IRemindService) {
         let createRemindController = UIHostingController(
             rootView: CreateRemindView(
                 expandedStateManager: expandedStateManager,
-                sheetOpenerManager: sheetOpenerManager
+                sheetOpenerManager: sheetOpenerManager,
+                remindService: remindService
             )
         )
         createRemindController.view.backgroundColor = .clear

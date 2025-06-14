@@ -3,6 +3,7 @@ import UIKit
 protocol IRemindsView: AnyObject {
     
     func remindsDidLoad(_ reminds: [Remind])
+    func insertNewRemind(_ remind: Remind)
 }
 
 final class RemindsController: UIViewController {
@@ -39,6 +40,10 @@ extension RemindsController: IRemindsView {
     func remindsDidLoad(_ reminds: [Remind]) {
         remindsDataSource?.updateData(reminds)
     }
+    
+    func insertNewRemind(_ remind: Remind) {
+        remindsDataSource?.addRemind(remind)
+    }
 }
 
 private extension RemindsController {
@@ -56,6 +61,10 @@ private extension RemindsController {
     func setupBindings() {
         remindsView.onAddRemindAction = { [weak self] in
             self?.presenter.createButtonDidTap()
+        }
+        
+        remindsView.onPriorityDidChange = { [weak self] priority in
+            self?.presenter.onUpdateRemindPriotiryValue(priority)
         }
     }
 }

@@ -1,10 +1,19 @@
 import SwiftUI
 
-final class CreateRemindViewModel: ObservableObject {
+protocol ICreateRemindViewModel: ObservableObject {
+    
+    var remindTitle: String { get set }
+    var selectedType: RemindType { get set }
+    var interval: Int { get set }
+    var remindPriority: RemindsPriority { get set }
+}
+
+final class CreateRemindViewModel: ICreateRemindViewModel {
     
     @Published var remindTitle: String = ""
     @Published var selectedType: RemindType = .drinkWater
-    @Published var interval: Int = 1 
+    @Published var interval: Int = 1
+    @Published var remindPriority: RemindsPriority = .general
     
     var isTextFieldEmpty: Bool {
         remindTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -12,5 +21,16 @@ final class CreateRemindViewModel: ObservableObject {
     
     var intervalText: String {
         return interval == 1 ? "Every hour" : "Every \(interval) hours"
+    }
+    
+    func buildRemind() -> Remind {
+        let formattedDate = DateFormatter.standard.formatRelative(.now)
+        return RemindBuilder()
+            .title(remindTitle)
+            .category(selectedType)
+            .notificationInterval(interval)
+            .priority(remindPriority)
+            .createdAt(formattedDate)
+            .build()
     }
 }

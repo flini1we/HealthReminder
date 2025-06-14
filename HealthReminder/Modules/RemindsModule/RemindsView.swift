@@ -2,6 +2,7 @@ import UIKit
 
 final class RemindsView: UIView {
     var onAddRemindAction: (() -> Void)?
+    var onPriorityDidChange: ((RemindsPriority) -> Void)?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel().autoLayout()
@@ -65,6 +66,9 @@ final class RemindsView: UIView {
             .foregroundColor: UIColor.label
         ], for: .selected)
         
+        segment.addAction(UIAction { [weak self] _ in
+            self?.onPriorityDidChange?(RemindsPriority.allCases[segment.selectedSegmentIndex])
+        }, for: .valueChanged)
         return segment
     }()
     
@@ -176,5 +180,5 @@ private extension String {
 
 private extension CGFloat {
     
-    static let segmentWidth: CGFloat = UIScreen.main.bounds.width * 0.85
+    static let segmentWidth: CGFloat = UIScreen.main.bounds.width * 0.9
 }
