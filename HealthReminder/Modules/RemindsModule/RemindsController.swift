@@ -13,6 +13,7 @@ final class RemindsController: UIViewController {
     }
     private var presenter: IRemindsPresenter
     private var remindsDataSource: RemindsDataSource?
+    private var remindDelegate: RemindsDelegate?
     
     init(presenter: IRemindsPresenter) {
         self.presenter = presenter
@@ -54,12 +55,21 @@ private extension RemindsController {
     
     func setup() {
         setupDataSource()
+        setupDelegate()
         setupBindings()
     }
     
     func setupDataSource() {
         remindsDataSource = RemindsDataSource()
         remindsDataSource?.setupWithTable(tableView: remindsView.remindsTableView, reminds: [])
+    }
+    
+    func setupDelegate() {
+        remindDelegate = RemindsDelegate()
+        remindDelegate?.onRemindDidTap = { [weak self] position in
+            self?.presenter.onRemindDidTap(at: position)
+        }
+        remindsView.remindsTableView.delegate = remindDelegate
     }
     
     func setupBindings() {

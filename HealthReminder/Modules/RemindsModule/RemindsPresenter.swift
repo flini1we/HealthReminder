@@ -11,6 +11,7 @@ protocol IRemindsPresenter: AnyObject {
     func handleNewRemind(_ remind: Remind)
     func onUpdateRemindPriotiryValue(_ priotiry: RemindsPriority)
     func loadData()
+    func onRemindDidTap(at index: Int)
 }
 
 final class RemindsPresenter {
@@ -66,6 +67,11 @@ extension RemindsPresenter: IRemindsPresenter {
             let reminds = await remindsInteractor.loadReminds()
             controller?.remindsDidLoad(reminds)
         }
+    }
+    
+    func onRemindDidTap(at index: Int) {
+        let remind = remindsInteractor.reminds[index]
+        remindsRouter.showDetailScreen(for: remind)
     }
 }
 

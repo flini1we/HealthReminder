@@ -18,20 +18,26 @@ final class RemindsDataSource: NSObject {
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: RemindCell.identifier, for: indexPath) as? RemindCell
                 else { return UITableViewCell() }
-                cell.setupWithRemind(remind)
+                cell.configure(with: remind)
                 return cell
             }
         )
         dataSource?.defaultRowAnimation = .fade
-        applyFreshSnapshot(with: reminds)
+        PerformOnMain {
+            self.applyFreshSnapshot(with: reminds)
+        }
     }
     
     func updateData(_ reminds: [Remind]) {
-        applyFreshSnapshot(with: reminds)
+        PerformOnMain {
+            self.applyFreshSnapshot(with: reminds)
+        }
     }
     
     func addRemind(_ remind: Remind) {
-        addElement(remind)
+        PerformOnMain {
+            self.addElement(remind)
+        }
     }
 }
 
@@ -54,5 +60,11 @@ private extension RemindsDataSource {
         }
         snapshot.appendItems([remin], toSection: .main)
         dataSource?.apply(snapshot)
+    }
+    
+    func PerformOnMain(completion: @escaping (() -> Void)) {
+        DispatchQueue.main.async {
+            completion()
+        }
     }
 }

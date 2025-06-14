@@ -52,5 +52,5 @@ final class RemindService: IRemindService {
 private extension String {
     
     static let notificationsDenied = "Уведомления отключены"
-    static let acceptNotificationsInSettings = "Разрешите уведомления в настройках, чтобы не пропускать важные события",
+    static let acceptNotificationsInSettings = "Разрешите уведомления в настройках, чтобы не пропускать важные события"
 }

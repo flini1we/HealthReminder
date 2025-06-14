@@ -32,4 +32,8 @@ struct Remind: Identifiable, Hashable {
     mutating func setCreatedAt(_ createdAt: String) {
         self.createdAt = createdAt
     }
+    
+    func getTail() -> String {
+        return notificationInterval == 1 ? "" : "s"
+    }
 }

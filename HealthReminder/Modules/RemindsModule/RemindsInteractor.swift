@@ -4,7 +4,7 @@ import Combine
 protocol IRemindsInteractor: AnyObject {
     
     var presenter: IRemindsPresenter? { get set }
-    
+    var reminds: [Remind] { get }
     var selectedRemindsCategory: RemindsPriority { get set }
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher { get }
     
@@ -19,7 +19,7 @@ final class RemindsInteractor {
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher {
         $selectedRemindsCategory
     }
-    private var reminds: [Remind]
+    private(set) var reminds: [Remind]
     
     init() {
         reminds = [

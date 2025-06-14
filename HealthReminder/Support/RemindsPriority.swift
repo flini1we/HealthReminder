@@ -24,4 +24,17 @@ enum RemindsPriority: String, CaseIterable {
         image.withTintColor(.baseBG, renderingMode: .alwaysOriginal)
         return image
     }
+    
+    var color: UIColor {
+        switch self {
+        case .all:
+            return .systemGray6
+        case .important:
+            return .systemRed
+        case .general:
+            return .systemBlue
+        case .daily:
+            return .systemGreen
+        }
+    }
 }
