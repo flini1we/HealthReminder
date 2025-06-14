@@ -117,6 +117,15 @@ final class RemindsView: UIView {
         table.showsVerticalScrollIndicator = false
         table.backgroundColor = .clear
         table.register(RemindCell.self, forCellReuseIdentifier: RemindCell.identifier)
+        
+        let bgTitle = UILabel()
+        bgTitle.text = "Here will be your reminds\n\n"
+        bgTitle.numberOfLines = 0
+        bgTitle.textColor = .systemGray
+        bgTitle.textAlignment = .center
+        bgTitle.font = .systemFont(ofSize: .Fonts.default, weight: .semibold)
+        table.backgroundView = bgTitle
+        
         return table
     }()
     

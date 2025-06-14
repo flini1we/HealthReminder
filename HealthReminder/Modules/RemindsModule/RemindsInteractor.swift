@@ -17,6 +17,8 @@ protocol IRemindsInteractor: AnyObject {
 final class RemindsInteractor {
     
     weak var presenter: IRemindsPresenter?
+    private var container: ModelContainer?
+    
     @Published var selectedRemindsCategory: RemindsPriority = .all
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher {
         $selectedRemindsCategory
@@ -25,7 +27,6 @@ final class RemindsInteractor {
     var remindsPublisher: Published<[Remind]>.Publisher {
         $reminds
     }
-    private var container: ModelContainer?
     
     init() {
         do {

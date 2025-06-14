@@ -40,6 +40,9 @@ final class RemindsController: UIViewController {
 extension RemindsController: IRemindsView {
     
     func remindsDidLoad(_ reminds: [Remind]) {
+        DispatchQueue.main.async {
+            self.remindsView.remindsTableView.backgroundView?.isHidden = !reminds.isEmpty
+        }
         remindsDataSource?.updateData(reminds)
     }
     
