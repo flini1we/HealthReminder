@@ -191,24 +191,26 @@ struct CreateRemindView: View {
         var body: some View {
             HStack(spacing: 0) {
                 ForEach(RemindsPriority.allCases, id: \.self) { priority in
-                    ZStack {
-                        if selectedPriority == priority {
-                            Capsule()
-                                .fill(Color.white)
-                                .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-                                .matchedGeometryEffect(id: "selectedTab", in: namespace)
+                    if priority != .all {
+                        ZStack {
+                            if selectedPriority == priority {
+                                Capsule()
+                                    .fill(Color.white)
+                                    .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                                    .matchedGeometryEffect(id: "selectedTab", in: namespace)
+                            }
+                            
+                            Text(priority.rawValue)
+                                .foregroundStyle(selectedPriority == priority ? .black : .gray)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
                         }
-                        
-                        Text(priority.rawValue)
-                            .foregroundStyle(selectedPriority == priority ? .black : .gray)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
+                        .onTapGesture {
+                            selectedPriority = priority
+                        }
+                        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedPriority)
                     }
-                    .onTapGesture {
-                        selectedPriority = priority
-                    }
-                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedPriority)
                 }
             }
             .padding(2.5)

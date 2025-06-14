@@ -66,6 +66,7 @@ private extension ServiceLocator {
     func registerServices() {
         do {
             try register(RemindService() as IRemindService)
+            try register(PushNotificationService() as IPushNotificationService)
         }
         catch {
             print(error.localizedDescription)

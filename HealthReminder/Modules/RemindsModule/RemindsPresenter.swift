@@ -10,20 +10,29 @@ protocol IRemindsPresenter: AnyObject {
     func createButtonDidTap()
     func handleNewRemind(_ remind: Remind)
     func onUpdateRemindPriotiryValue(_ priotiry: RemindsPriority)
+    func loadData()
 }
 
 final class RemindsPresenter {
     
-    weak var controller: IRemindsView?
+    weak var controller: IRemindsView? {
+        didSet { onControllerDidSet?() }
+    }
     var remindService: IRemindService
     private var remindsRouter: IRemindsRouter
     private var remindsInteractor: IRemindsInteractor
     private var canvellables: Set<AnyCancellable> = []
+    var onControllerDidSet: (() -> Void)?
     
     init(router: IRemindsRouter, interactor: IRemindsInteractor) {
         self.remindsRouter = router
         self.remindsInteractor = interactor
         try! remindService = ServiceLocator.shared.resolve()
+        remindService.controllerToPresentAlert = controller
+        onControllerDidSet = { [weak self] in
+            guard let self else { return }
+            remindService.controllerToPresentAlert = controller
+        }
         setupBindings()
     }
 }
@@ -31,13 +40,8 @@ final class RemindsPresenter {
 extension RemindsPresenter: IRemindsPresenter {
     
     func viewDidLoad() {
-        Task {
-            var reminds = await remindsInteractor.loadReminds()
-            
-            await MainActor.run {
-                controller?.remindsDidLoad(reminds)
-            }
-        }
+        requestForNotification()
+        loadData()
     }
     
     func createButtonDidTap() {
@@ -56,9 +60,27 @@ extension RemindsPresenter: IRemindsPresenter {
     func onUpdateRemindPriotiryValue(_ priotiry: RemindsPriority) {
         remindsInteractor.selectedRemindsCategory = priotiry
     }
+    
+    func loadData() {
+        Task {
+            let reminds = await remindsInteractor.loadReminds()
+            controller?.remindsDidLoad(reminds)
+        }
+    }
 }
 
 private extension RemindsPresenter {
+    
+    func requestForNotification() {
+        do {
+            let pushNotificationService: IPushNotificationService = try ServiceLocator.shared.resolve()
+            Task {
+                try? await pushNotificationService.registerForNotification()
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     func setupBindings() {
         remindService
@@ -73,7 +95,7 @@ private extension RemindsPresenter {
             .selectedRemindsCategoryPublisher
             .dropFirst()
             .sink { [weak self] priority in
-                self?.viewDidLoad()
+                self?.loadData()
             }
             .store(in: &canvellables)
     }

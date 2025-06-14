@@ -17,6 +17,7 @@ final class RemindsController: UIViewController {
     init(presenter: IRemindsPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        presenter.controller = self
     }
     
     required init?(coder: NSCoder) {
@@ -43,6 +44,9 @@ extension RemindsController: IRemindsView {
     
     func insertNewRemind(_ remind: Remind) {
         remindsDataSource?.addRemind(remind)
+        if remindsView.remindsCategorySegmentControl.selectedSegmentIndex == 0 {
+            presenter.loadData()
+        }
     }
 }
 
