@@ -1,10 +1,12 @@
 import UIKit
 import Combine
+import SwiftData
 
 protocol IRemindsInteractor: AnyObject {
     
     var presenter: IRemindsPresenter? { get set }
     var reminds: [Remind] { get }
+    var remindsPublisher: Published<[Remind]>.Publisher { get }
     var selectedRemindsCategory: RemindsPriority { get set }
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher { get }
     
@@ -19,14 +21,21 @@ final class RemindsInteractor {
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher {
         $selectedRemindsCategory
     }
-    private(set) var reminds: [Remind]
+    @Published var reminds: [Remind] = []
+    var remindsPublisher: Published<[Remind]>.Publisher {
+        $reminds
+    }
+    private var container: ModelContainer?
     
     init() {
-        reminds = [
-            .init(title: "Drink water", category: .drinkWater, priority: .daily, notificationInterval: 4, createdAt: ""),
-            .init(title: "Gym", category: .workout, priority: .general, notificationInterval: 12, createdAt: ""),
-            .init(title: "Stretching", category: .stretch, priority: .important, notificationInterval: 20, createdAt: "")
-        ]
+        do {
+            container = try ModelContainer(for: RemindModel.self)
+            Task {
+                self.reminds = await self.loadData()
+            }
+        } catch {
+            print("Error to setup container: \(error.localizedDescription)")
+        }
     }
 }
 
@@ -43,7 +52,25 @@ extension RemindsInteractor: IRemindsInteractor {
         return filteredReminds
     }
     
+    @MainActor
     func addRemind(_ remind: Remind) async {
         reminds.append(remind)
+        container?.mainContext.insert(RemindModel(from: remind))
+        do {
+            try container?.mainContext.save()
+        } catch {
+            print("Error to save data: \(error.localizedDescription)")
+        }
+    }
+}
+
+private extension RemindsInteractor {
+    
+    @MainActor
+    func loadData() -> [Remind] {
+        let descriptor = FetchDescriptor<RemindModel>()
+    
+        let reminds = (try? self.container?.mainContext.fetch(descriptor)) ?? []
+        return reminds.map { $0.convertToRemind() }
     }
 }

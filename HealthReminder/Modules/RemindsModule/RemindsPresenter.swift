@@ -107,5 +107,12 @@ private extension RemindsPresenter {
                 self?.loadData()
             }
             .store(in: &canvellables)
+        
+        remindsInteractor
+            .remindsPublisher
+            .sink { [weak self] reminds in
+                self?.loadData()
+            }
+            .store(in: &canvellables)
     }
 }
