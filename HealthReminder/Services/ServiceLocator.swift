@@ -28,13 +28,14 @@ final class ServiceLocator {
         }
     }
     
-    func register<T>(_ service: T) throws {
+    func register<T>(_ service: T) throws -> T {
         let key = "\(T.self)"
         
         if services[key] != nil {
             throw ServiceLocatorError.duplicateService(key)
         }
         services[key] = service
+        return service
     }
     
     func resolve<T>() throws -> T {
@@ -65,8 +66,12 @@ private extension ServiceLocator {
     
     func registerServices() {
         do {
-            try register(RemindService() as IRemindService)
-            try register(PushNotificationService() as IPushNotificationService)
+            _ = try register(RemindService() as IRemindService)
+            let notificationService = try register(PushNotificationService() as IPushNotificationService)
+            _ = try register(
+                NotificationRequestFactory(
+                    notificationService: notificationService
+                ) as INotificationRequestFactory)
         }
         catch {
             print(error.localizedDescription)

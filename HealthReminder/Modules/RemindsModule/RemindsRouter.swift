@@ -60,7 +60,7 @@ extension RemindsRouter: IRemindsRouter {
     }
     
     func createDetailDeepLinkURL(for remind: Remind) -> URL? {
-        DeeplinkRemindDetailBuilder().buildDeeplink(for: remind)
+        DeeplinkRemindDetailBuilder().buildRemindDetailDeeplink(for: remind)
     }
 }
 

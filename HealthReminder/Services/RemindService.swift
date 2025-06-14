@@ -30,7 +30,13 @@ final class RemindService: IRemindService {
             Task {
                 let isNotificationGranted = await notificationCervice.isNotificationGranted()
                 if isNotificationGranted {
-                    
+                    do {
+                        let notificationRequestFactory: INotificationRequestFactory = try ServiceLocator.shared.resolve()
+                        notificationRequestFactory.createRemindNotificationRequest(from: remind)
+                    } catch {
+                        // TODO: handle error
+                        fatalError("")
+                    }
                 } else {
                     guard let controller = controllerToPresentAlert as? UIViewController else { return }
                     AlertFactory.showSettingsAlert(

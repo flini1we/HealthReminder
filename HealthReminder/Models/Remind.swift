@@ -10,7 +10,13 @@ struct Remind: Identifiable, Hashable, Codable {
     var createdAt: String
     
     static func getEmpty() -> Self {
-        .init(title: "", category: .breathing, priority: .general, notificationInterval: 0, createdAt: "-..-..-")
+        .init(
+            title: "",
+            category: .breathing,
+            priority: .general,
+            notificationInterval: 0,
+            createdAt: ""
+        )
     }
     
     mutating func setTitle(_ title: String) {
@@ -35,5 +41,15 @@ struct Remind: Identifiable, Hashable, Codable {
     
     func getTail() -> String {
         return notificationInterval == 1 ? "" : "s"
+    }
+    
+    func getUserInfo() -> [String: Any] {
+        [
+            "title": self.title,
+            "category": self.category.rawValue,
+            "priority": self.priority.rawValue,
+            "notificationInterval": self.notificationInterval,
+            "createdAt": self.createdAt,
+        ]
     }
 }

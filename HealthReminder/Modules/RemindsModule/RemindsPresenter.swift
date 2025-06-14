@@ -82,9 +82,9 @@ private extension RemindsPresenter {
     
     func requestForNotification() {
         do {
-            let pushNotificationService: IPushNotificationService = try ServiceLocator.shared.resolve()
+            let notificationCervice: IPushNotificationService = try ServiceLocator.shared.resolve()
             Task {
-                try? await pushNotificationService.registerForNotification()
+                try? await notificationCervice.registerForNotification()
             }
         } catch {
             print(error.localizedDescription)

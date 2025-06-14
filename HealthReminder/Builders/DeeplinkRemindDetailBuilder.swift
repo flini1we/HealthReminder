@@ -2,13 +2,13 @@ import UIKit
 
 final class DeeplinkRemindDetailBuilder {
     
-    private let deeplinkBaseURL = "healthReminder://remind?"
+    private let deeplinkBaseURL = "healthReminder://"
     
     private lazy var jsonEncoder: JSONEncoder = {
         JSONEncoder()
     }()
     
-    func buildDeeplink(for remind: Remind) -> URL? {
+    func buildRemindDetailDeeplink(for remind: Remind) -> URL? {
         guard
             let data = try? jsonEncoder.encode(remind),
             let jsonString = String(data: data, encoding: .utf8)
@@ -18,7 +18,7 @@ final class DeeplinkRemindDetailBuilder {
             let queryParams = convertJsonStringIntoQueryParams(jsonString: jsonString)
         else { return nil }
         
-        return URL(string: deeplinkBaseURL + queryParams)
+        return URL(string: deeplinkBaseURL + "remind?" + queryParams)
     }
 }
 
