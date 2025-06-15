@@ -18,7 +18,7 @@ final class DeepLinkManager {
             guard let queryRemind = parseRemind(from: components) else { return }
             navigationController.pushViewController(
                 UIHostingController(
-                    rootView: RemindDetailView(remind: queryRemind)),
+                    rootView: RemindDetailView(remind: queryRemind, usingAnimation: true)),
                 animated: true
             )
         default:

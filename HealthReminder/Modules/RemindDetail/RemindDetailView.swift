@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RemindDetailView: View {
     let remind: Remind
+    var usingAnimation: Bool
     @State private var animate = false
 
     var body: some View {
@@ -19,33 +20,33 @@ struct RemindDetailView: View {
                 Text(remind.category.displayName)
                     .font(.largeTitle.bold())
                     .transition(.opacity)
-                    .opacity(animate ? 1 : 0)
-                    .animation(.easeInOut(duration: 0.5).delay(0.1), value: animate)
+                    .opacity(usingAnimation ? animate ? 1 : 0 : 1)
+                    .animation(.easeInOut(duration: usingAnimation ? 0.5 : 0).delay(usingAnimation ? 0.1 : 0), value: animate)
 
                 VStack(spacing: .Padding.normal) {
                     animatedInfoRow(
                         icon: .titleImage,
                         title: .titleTitle,
                         value: remind.title,
-                        delay: 0.2
+                        delay: usingAnimation ? 0.2 : 0
                     )
                     animatedInfoRow(
                         icon: .priorityImage,
                         title: .priorityTitle,
                         value: remind.priority.rawValue,
-                        delay: 0.3
+                        delay: usingAnimation ? 0.3 : 0
                     )
                     animatedInfoRow(
                         icon: .notificationImage,
                         title: .notificationTitle,
                         value: "\(remind.notificationInterval) hour\(remind.getTail())",
-                        delay: 0.4
+                        delay: usingAnimation ? 0.4 : 0
                     )
                     animatedInfoRow(
                         icon: .calendarImage,
                         title: .calendarTitle,
                         value: remind.createdAt,
-                        delay: 0.5
+                        delay: usingAnimation ? 0.5 : 0
                     )
                 }
                 .padding(.horizontal)
@@ -55,7 +56,9 @@ struct RemindDetailView: View {
             }
             .padding(.top, .Padding.huge)
             .onAppear {
-                animate = true
+                if usingAnimation {
+                    animate = true
+                }
             }
         }
     }
@@ -97,8 +100,8 @@ struct RemindDetailView: View {
         )
         .shadow(color: .black.opacity(0.1), radius: .Padding.tiny, x: 2, y: 2)
         .offset(y: animate ? 0 : 20)
-        .opacity(animate ? 1 : 0)
-        .animation(.spring(response: 0.6, dampingFraction: 0.75).delay(delay), value: animate)
+        .opacity(usingAnimation ? animate ? 1 : 0 : 1)
+        .animation(.spring(response: 0.6, dampingFraction: 0.75).delay(usingAnimation ? delay : 0), value: animate)
     }
 }
 
@@ -107,7 +110,7 @@ private extension String {
     
     static let titleImage = "textformat"
     static let priorityImage = "flag.fill"
-    static let notificationImage = "bell.fill"
+    static let notificationImage = "bell.and.waves.left.and.right"
     static let calendarImage = "calendar"
     static let titleTitle = "Title"
     static let priorityTitle = "Priority"

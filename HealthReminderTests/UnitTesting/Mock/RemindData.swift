@@ -2,7 +2,7 @@ import Foundation
 @testable import enum HealthReminder.RemindType
 @testable import enum HealthReminder.RemindsPriority
 
-enum RemintDataTest {
+enum RemindDataTest {
     
     static let title = "Test remind"
     static let category = RemindType.drinkWater

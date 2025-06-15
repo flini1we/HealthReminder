@@ -12,7 +12,7 @@ final class RemindCell: UITableViewCell {
         view.layer.cornerRadius = .Padding.normal
         view.addShadow(
             opacity: .lowOpacity,
-            offset: .init(width: 0, height: 5),
+            offset: .init(width: 0, height: 2),
             radius: .Padding.small,
             shouldRasterize: true
         )
@@ -60,7 +60,7 @@ final class RemindCell: UITableViewCell {
     
     private lazy var intervalLabel: UILabel = {
         let label = UILabel().autoLayout()
-        label.font = .systemFont(ofSize: .Fonts.tiny)
+        label.font = .systemFont(ofSize: .Fonts.normal)
         label.textColor = .systemGray
         return label
     }()
@@ -99,6 +99,7 @@ final class RemindCell: UITableViewCell {
             intervalLabel,
             dateLabel
         ]).autoLayout()
+        stack.alignment = .center
         stack.distribution = .equalSpacing
         return stack
     }()
@@ -194,5 +195,5 @@ private extension CGFloat {
 
 private extension String {
     
-    static let bellImage = "bell.and.waves.left.and.right.fill"
+    static let bellImage = "bell.and.waves.left.and.right"
 }

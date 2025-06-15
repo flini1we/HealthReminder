@@ -8,11 +8,11 @@ final class NotificationRequestFactoryTests: XCTestCase {
         let factory = NotificationRequestFactory(notificationService: mockService)
 
         let remind = Remind(
-            title: RemintDataTest.title,
-            category: RemintDataTest.category,
-            priority: RemintDataTest.priority,
-            notificationInterval: RemintDataTest.notificationInterval,
-            createdAt: RemintDataTest.createdAt
+            title: RemindDataTest.title,
+            category: RemindDataTest.category,
+            priority: RemindDataTest.priority,
+            notificationInterval: RemindDataTest.notificationInterval,
+            createdAt: RemindDataTest.createdAt
         )
         factory.createRemindNotificationRequest(from: remind)
 
@@ -25,7 +25,7 @@ final class NotificationRequestFactoryTests: XCTestCase {
 
         let content = request.content
         
-        XCTAssertEqual(content.title, RemintDataTest.title)
+        XCTAssertEqual(content.title, RemindDataTest.title)
         XCTAssertEqual(content.body, "Remind about general task")
         XCTAssertEqual(content.sound, UNNotificationSound.default)
         XCTAssertEqual(content.categoryIdentifier, remind.category.rawValue)
@@ -38,9 +38,9 @@ final class NotificationRequestFactoryTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(remindDict["title"] as? String, RemintDataTest.title)
-        XCTAssertEqual(remindDict["priority"] as? String, RemintDataTest.priority.rawValue)
-        XCTAssertEqual(remindDict["category"] as? String, "\(RemintDataTest.category)")
-        XCTAssertEqual(remindDict["createdAt"] as? String, RemintDataTest.createdAt)
+        XCTAssertEqual(remindDict["title"] as? String, RemindDataTest.title)
+        XCTAssertEqual(remindDict["priority"] as? String, RemindDataTest.priority.rawValue)
+        XCTAssertEqual(remindDict["category"] as? String, "\(RemindDataTest.category)")
+        XCTAssertEqual(remindDict["createdAt"] as? String, RemindDataTest.createdAt)
     }
 }

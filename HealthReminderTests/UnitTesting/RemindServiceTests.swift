@@ -31,11 +31,11 @@ final class RemindServiceTests: XCTestCase {
     
     func test_appendRemind_storesRemindAndPublishesIt() {
         let remind = Remind(
-            title: RemintDataTest.title,
-            category: RemintDataTest.category,
-            priority: RemintDataTest.priority,
-            notificationInterval: RemintDataTest.notificationInterval,
-            createdAt: RemintDataTest.createdAt
+            title: RemindDataTest.title,
+            category: RemindDataTest.category,
+            priority: RemindDataTest.priority,
+            notificationInterval: RemindDataTest.notificationInterval,
+            createdAt: RemindDataTest.createdAt
         )
         var publishedReminds: [Remind] = []
         var newRemind: Remind?
@@ -67,8 +67,8 @@ final class RemindServiceTests: XCTestCase {
 
         wait(for: [expectation1, expectation2, pushExpectation], timeout: 2.0)
         XCTAssertEqual(publishedReminds.count, prevRemindsCount + 1)
-        XCTAssertEqual(publishedReminds.first?.title, RemintDataTest.title)
-        XCTAssertEqual(newRemind?.priority, RemintDataTest.priority)
+        XCTAssertEqual(publishedReminds.first?.title, RemindDataTest.title)
+        XCTAssertEqual(newRemind?.priority, RemindDataTest.priority)
         XCTAssertEqual(prevNotification + 1, mockPush.notificationsSent)
     }
 }

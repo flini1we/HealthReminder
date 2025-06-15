@@ -10,7 +10,7 @@ protocol IRemindsInteractor: AnyObject {
     var selectedRemindsCategory: RemindsPriority { get set }
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher { get }
     
-    func loadReminds() async -> [Remind]
+    func obtainReminds() async -> [Remind]
     func addRemind(_ remind: Remind) async
 }
 
@@ -19,7 +19,6 @@ final class RemindsInteractor {
     private var dataManager: ISwiftDataManager
     
     weak var presenter: IRemindsPresenter?
-    private var container: ModelContainer?
     
     @Published var selectedRemindsCategory: RemindsPriority = .all
     var selectedRemindsCategoryPublisher: Published<RemindsPriority>.Publisher {
@@ -40,7 +39,7 @@ final class RemindsInteractor {
 
 extension RemindsInteractor: IRemindsInteractor {
         
-    func loadReminds() async -> [Remind] {
+    func obtainReminds() async -> [Remind] {
         if selectedRemindsCategory == .all {
             return reminds
         }

@@ -64,7 +64,7 @@ extension RemindsPresenter: IRemindsPresenter {
     
     func loadData() {
         Task {
-            let reminds = await remindsInteractor.loadReminds()
+            let reminds = await remindsInteractor.obtainReminds()
             controller?.remindsDidLoad(reminds)
         }
     }

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CFD75A512DFF248400D1C478 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = CFD75A502DFF248400D1C478 /* SnapshotTesting */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CF53BD5C2DF8D1F30015890F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -72,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFD75A512DFF248400D1C478 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +96,7 @@
 				CF53BD472DF8D1F00015890F /* HealthReminder */,
 				CF53BD5E2DF8D1F30015890F /* HealthReminderTests */,
 				CF53BD682DF8D1F30015890F /* HealthReminderUITests */,
+				CFD75A392DFF224900D1C478 /* Frameworks */,
 				CF53BD462DF8D1F00015890F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +109,13 @@
 				CF53BD652DF8D1F30015890F /* HealthReminderUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CFD75A392DFF224900D1C478 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +161,7 @@
 			);
 			name = HealthReminderTests;
 			packageProductDependencies = (
+				CFD75A502DFF248400D1C478 /* SnapshotTesting */,
 			);
 			productName = HealthReminderTests;
 			productReference = CF53BD5B2DF8D1F30015890F /* HealthReminderTests.xctest */;
@@ -196,6 +210,7 @@
 					};
 					CF53BD642DF8D1F30015890F = {
 						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
 						TestTargetID = CF53BD442DF8D1F00015890F;
 					};
 				};
@@ -209,6 +224,9 @@
 			);
 			mainGroup = CF53BD3C2DF8D1F00015890F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CFD75A402DFF22E300D1C478 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CF53BD462DF8D1F00015890F /* Products */;
 			projectDirPath = "";
@@ -502,6 +520,7 @@
 		CF53BD772DF8D1F30015890F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AJ5QNVYP6Y;
@@ -510,6 +529,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.yandex.HealthReminderUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = HealthReminder;
@@ -519,6 +539,7 @@
 		CF53BD782DF8D1F30015890F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AJ5QNVYP6Y;
@@ -573,6 +594,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CFD75A402DFF22E300D1C478 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CFD75A502DFF248400D1C478 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFD75A402DFF22E300D1C478 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CF53BD3D2DF8D1F00015890F /* Project object */;
 }
