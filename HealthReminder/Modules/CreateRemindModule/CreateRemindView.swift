@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct CreateRemindView: View {
     
@@ -8,6 +9,7 @@ struct CreateRemindView: View {
     @StateObject private var viewModel = CreateRemindViewModel()
     @FocusState private var isFocused: Bool
     @Environment(\.dismiss) var dismiss
+    @State private var keyboardHeight: CGFloat = .initialKeyboardPosition
     
     private let remindService: IRemindService
     
@@ -23,9 +25,13 @@ struct CreateRemindView: View {
         ZStack {
             VStack(spacing: .Padding.normal) {
                 ExpandedIndicator(isExpanded: isExpanded)
+                    .opacity(isFocused ? 0 : 1)
+                    .animation(.easeInOut, value: isFocused)
                 
                 ZStack {
                     Color.white.ignoresSafeArea()
+                        .opacity(isFocused ? 0 : 1)
+                        .animation(.smooth, value: isFocused)
                     
                     ScreenView(isExpanded: isExpanded)
                 }
@@ -106,14 +112,13 @@ struct CreateRemindView: View {
                 )
                 .modifier(remindTitleTextFieldModifier())
                 .focused($isFocused)
-                .padding()
+                .padding(.Padding.normal)
+                .position(x: UIScreen.main.bounds.midX, y: keyboardHeight)
                 .onChange(of: viewModel.isTextFieldEmpty) { _, newValue in
                     sheetOpenerManager.couldOpen = !newValue
                 }
-                .onChange(of: isFocused) { _, isEditing in
-                    if isEditing {
-                        // TODO: Keyboard
-                    }
+                .onReceive(Publishers.keyboardHeight) {
+                    keyboardHeight = $0 == 0 ? .initialKeyboardPosition : $0 - .initialKeyboardPosition
                 }
             }
             Spacer()
@@ -239,5 +244,10 @@ private extension String {
             }
         }
     }
+}
+
+private extension CGFloat {
+    
+    static let initialKeyboardPosition: CGFloat = 40
 }
 
