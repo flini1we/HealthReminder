@@ -16,6 +16,8 @@ protocol IRemindsInteractor: AnyObject {
 
 final class RemindsInteractor {
     
+    private var dataManager: ISwiftDataManager
+    
     weak var presenter: IRemindsPresenter?
     private var container: ModelContainer?
     
@@ -28,14 +30,10 @@ final class RemindsInteractor {
         $reminds
     }
     
-    init() {
-        do {
-            container = try ModelContainer(for: RemindModel.self)
-            Task {
-                self.reminds = await self.loadData()
-            }
-        } catch {
-            print("Error to setup container: \(error.localizedDescription)")
+    init(dataManager: ISwiftDataManager) {
+        self.dataManager = dataManager
+        Task {
+            self.reminds = await dataManager.loadReminds().map { $0.convertToRemind() }
         }
     }
 }
@@ -53,25 +51,8 @@ extension RemindsInteractor: IRemindsInteractor {
         return filteredReminds
     }
     
-    @MainActor
     func addRemind(_ remind: Remind) async {
         reminds.append(remind)
-        container?.mainContext.insert(RemindModel(from: remind))
-        do {
-            try container?.mainContext.save()
-        } catch {
-            print("Error to save data: \(error.localizedDescription)")
-        }
-    }
-}
-
-private extension RemindsInteractor {
-    
-    @MainActor
-    func loadData() -> [Remind] {
-        let descriptor = FetchDescriptor<RemindModel>()
-    
-        let reminds = (try? self.container?.mainContext.fetch(descriptor)) ?? []
-        return reminds.map { $0.convertToRemind() }
+        dataManager.addRemind(remind)
     }
 }

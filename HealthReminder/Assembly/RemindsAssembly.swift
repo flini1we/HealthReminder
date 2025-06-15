@@ -40,16 +40,22 @@ private extension RemindsAssembly {
     func registerModules() {
         container.register(type: ExpandedStateManager.self, service: ExpandedStateManager())
         container.register(type: SheetOpenerManager.self, service: SheetOpenerManager())
+        container.register(type: ISwiftDataManager.self, service: SwiftDataManager())
         guard
             let expandedStateManager = container.resolve(type: ExpandedStateManager.self),
             let sheetOpenerManager = container.resolve(type: SheetOpenerManager.self)
         else {
-            fatalError(.shoutdRegisterManagersFirst)
+            fatalError(.shouldRegisterManagersFirst)
         }
         container.register(type: IRemindsRouter.self, service: RemindsRouter(
             expandedStateManager: expandedStateManager, sheetOpenerManager: sheetOpenerManager)
         )
-        container.register(type: IRemindsInteractor.self, service: RemindsInteractor())
+        guard
+            let dataManager = container.resolve(type: ISwiftDataManager.self)
+        else {
+            fatalError(.shouldRegisterDataManagerFirst)
+        }
+        container.register(type: IRemindsInteractor.self, service: RemindsInteractor(dataManager: dataManager))
         guard
             let router = container.resolve(type: IRemindsRouter.self),
             let interactor = container.resolve(type: IRemindsInteractor.self)
@@ -71,7 +77,8 @@ private extension RemindsAssembly {
 
 private extension String {
     
-    static let shoutdRegisterManagersFirst = "Ошибка регистрации менеджеров"
+    static let shouldRegisterManagersFirst = "Ошибка регистрации менеджеров"
+    static let shouldRegisterDataManagerFirst = "Ошибка регистрации менеджера даных"
     static let downcastExeption = "Ошибка преобразования типа проверьте зарегистрированные модули"
     static let registerModulesFirst = "Модуль не был зарегистрирован в момент resolve"
     static let shouldRegisterRouterInteractor = "Моудули роутера и интерактора не были зарегистрированы в котейнере"

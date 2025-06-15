@@ -71,7 +71,9 @@ private extension ServiceLocator {
             _ = try register(
                 NotificationRequestFactory(
                     notificationService: notificationService
-                ) as INotificationRequestFactory)
+                ) as INotificationRequestFactory
+            )
+            _ = try register(SwiftDataManager() as ISwiftDataManager)
         }
         catch {
             print(error.localizedDescription)
