@@ -1,49 +1,51 @@
-//@testable import HealthReminder
-//import XCTest
-//import PushKit
-//
-//import XCTest
-//
-//final class ReminderPushNotificationUITests: XCTestCase {
-//    
-//    override func setUp() {
-//        super.setUp()
-//        continueAfterFailure = false
-//    }
-//
-//    func testFakePushNotificationOpensRemindDetail() {
-//        let remind = Remind(
-//            title: RemindDataTest.title,
-//            category: RemindDataTest.category,
-//            priority: RemindDataTest.priority,
-//            notificationInterval: RemindDataTest.notificationInterval,
-//            createdAt: RemindDataTest.createdAt
-//        )
-//        
-//        guard let deeplink = DeeplinkRemindDetailBuilder().buildRemindDetailDeeplink(for: remind) else {
-//            XCTFail("Failed to create deeplink")
-//            return
-//        }
-//
-//        let fakePushPayload = """
-//        {
-//            "aps": {
-//                "alert": "Напоминание: \(remind.title)",
-//                "sound": "default"
-//            },
-//            "deeplink": "\(deeplink.absoluteString)"
-//        }
-//        """
-//        
-//        let app = XCUIApplication()
-//        app.launchArguments += [
-//            "-UITest",
-//            "-fakePushNotification",
-//            fakePushPayload
-//        ]
-//        app.launch()
-//        
-//        let titleLabel = app.staticTexts[remind.title]
-//        XCTAssertTrue(titleLabel.waitForExistence(timeout: 5), "RemindDetail screen did not open")
-//    }
-//}
+@testable import HealthReminder
+import XCTest
+import PushKit
+
+import XCTest
+
+final class ReminderPushNotificationUITests: XCTestCase {
+    
+    let app = XCUIApplication()
+    
+    override func setUp() {
+        super.setUp()
+        continueAfterFailure = false
+        app.launch()
+    }
+
+    func testFakePushNotificationOpensRemindDetail() {
+        let remind = Remind(
+            title: RemindDataTest.title,
+            category: RemindDataTest.category,
+            priority: RemindDataTest.priority,
+            notificationInterval: RemindDataTest.notificationInterval,
+            createdAt: RemindDataTest.createdAt
+        )
+        
+        let notificationContent = NotificationContentBuilder()
+            .title(remind.title)
+            .body("Remind about \(remind.priority.embend) task")
+            .sound(.default)
+            .categoryIdentifier(remind.category.rawValue)
+            .build()
+        
+        let notificationCenter = UNUserNotificationCenter.current()
+        
+        let request = UNNotificationRequest(
+            identifier: "test-notification",
+            content: notificationContent,
+            trigger: nil
+        )
+        
+        let expectation = XCTestExpectation(description: "Notification shown")
+        notificationCenter.add(request) { error in
+            if let error = error {
+                XCTFail("Ошибка при показе уведомления: \(error.localizedDescription)")
+            }
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+}

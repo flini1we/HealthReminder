@@ -10,6 +10,7 @@ protocol INotificationRequestFactory {
 
 final class NotificationRequestFactory: INotificationRequestFactory {
     private var notificationService: IPushNotificationService
+    private var userDefaults = UserDefaults.standard
     
     init(notificationService: IPushNotificationService) {
         self.notificationService = notificationService
@@ -20,12 +21,15 @@ final class NotificationRequestFactory: INotificationRequestFactory {
     func createRemindNotificationRequest(
         from remind: Remind
     ) {
+        let prevValue = userDefaults.integer(forKey: .notificationBadgesCountKey)
+        userDefaults.set(prevValue + 1, forKey: .notificationBadgesCountKey)
+        
         let notificationContent = NotificationContentBuilder()
             .title(remind.title)
             .body("Remind about \(remind.priority.embend) task")
             .sound(.default)
             .categoryIdentifier(remind.category.rawValue)
-            .badge(1)
+            .badge(prevValue + 1)
             .build()
         do {
             let remindData = try jsonEncoder.encode(remind)
@@ -44,4 +48,9 @@ final class NotificationRequestFactory: INotificationRequestFactory {
         
         notificationService.presetnNotificationRequest(request)
     }
+}
+
+private extension String {
+    
+    static let notificationBadgesCountKey = "notification_badges_count"
 }
