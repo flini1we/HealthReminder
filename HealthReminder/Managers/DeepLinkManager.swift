@@ -14,7 +14,7 @@ final class DeepLinkManager {
         else { return }
         
         switch host {
-        case "remind":
+        case .remindHost:
             guard let queryRemind = parseRemind(from: components) else { return }
             navigationController.pushViewController(
                 UIHostingController(

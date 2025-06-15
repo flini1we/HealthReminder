@@ -30,7 +30,7 @@ final class NotificationRequestFactory: INotificationRequestFactory {
         do {
             let remindData = try jsonEncoder.encode(remind)
             let remindDataDict = try JSONSerialization.jsonObject(with: remindData) as? [String: Any]
-            notificationContent.userInfo = ["remind": remindDataDict ?? []]
+            notificationContent.userInfo = [String.remindHost: remindDataDict ?? []]
         } catch {
             // TODO: handle
             fatalError("")

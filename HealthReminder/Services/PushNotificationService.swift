@@ -2,6 +2,8 @@ import UIKit
 import UserNotifications
 
 protocol IPushNotificationService {
+    var notificationsSent: Int { get set }
+    var lastNotificationRequest: UNNotificationRequest? { get }
 
     func registerForNotification() async throws -> Bool
     func isNotificationGranted() async -> Bool
@@ -9,6 +11,8 @@ protocol IPushNotificationService {
 }
 
 final class PushNotificationService: NSObject, IPushNotificationService {
+    var notificationsSent = 0
+    var lastNotificationRequest: UNNotificationRequest?
 
     private let notificationCenter = UNUserNotificationCenter.current()
     
@@ -29,6 +33,8 @@ final class PushNotificationService: NSObject, IPushNotificationService {
     }
     
     func presetnNotificationRequest(_ request: UNNotificationRequest) {
+        lastNotificationRequest = request
+        notificationsSent += 1
         notificationCenter.add(request)
     }
 }
