@@ -47,18 +47,18 @@ final class NotificationRequestFactory: INotificationRequestFactory {
         }
         
         let repeatingRequest = UNNotificationRequest(
-            identifier: UUID().uuidString,
+            identifier: "instant_\(remind.id)",
             content: notificationContent,
             trigger: repeatingNotificationTrigger
         )
         
-        let currentleRequest = UNNotificationRequest(
-            identifier: UUID().uuidString,
+        let instantRequest = UNNotificationRequest(
+            identifier: "instant_\(remind.id)",
             content: notificationContent,
             trigger: nil
         )
         
-        notificationService.presetnNotificationRequest(currentleRequest)
+        notificationService.presetnNotificationRequest(instantRequest)
         notificationService.presetnNotificationRequest(repeatingRequest)
     }
 }
