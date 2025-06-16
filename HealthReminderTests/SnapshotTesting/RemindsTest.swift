@@ -7,7 +7,7 @@ import SwiftUI
 final class RemindsTest: XCTestCase {
     
     override func setUpWithError() throws {
-        isRecording = false
+        // isRecording = false
     }
     
     func testWithOutReminds() throws {
@@ -23,12 +23,12 @@ final class RemindsTest: XCTestCase {
             return
         }
         remindViewController.remindsDidLoad([
-            .init(title: "1", category: .breathing, priority: .daily, notificationInterval: 1, createdAt: "2025-02-02"),
-            .init(title: "2", category: .drinkWater, priority: .general, notificationInterval: 2, createdAt: "2025-02-02"),
-            .init(title: "3", category: .meal, priority: .important, notificationInterval: 3, createdAt: "2025-02-02"),
-            .init(title: "4", category: .sleep, priority: .daily, notificationInterval: 4, createdAt: "2025-02-02"),
-            .init(title: "5", category: .stretch, priority: .general, notificationInterval: 5, createdAt: "2025-02-02"),
-            .init(title: "6", category: .vitamins, priority: .important, notificationInterval: 6, createdAt: "2025-02-02"),
+            .init(title: "1", category: .breathing, priority: .daily, notificationInterval: 1, createdAt: .now),
+            .init(title: "2", category: .drinkWater, priority: .general, notificationInterval: 2, createdAt: .now),
+            .init(title: "3", category: .meal, priority: .important, notificationInterval: 3, createdAt: .now),
+            .init(title: "4", category: .sleep, priority: .daily, notificationInterval: 4, createdAt: .now),
+            .init(title: "5", category: .stretch, priority: .general, notificationInterval: 5, createdAt: .now),
+            .init(title: "6", category: .vitamins, priority: .important, notificationInterval: 6, createdAt: .now),
         ])
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             assertSnapshot(of: remindsController, as: .image)
@@ -41,7 +41,7 @@ final class RemindsTest: XCTestCase {
             category: .breathing,
             priority: .general,
             notificationInterval: 2,
-            createdAt: "2025-02-02"
+            createdAt: .now
         )
         let remindDetailView = RemindDetailView(remind: remind, usingAnimation: false)
         

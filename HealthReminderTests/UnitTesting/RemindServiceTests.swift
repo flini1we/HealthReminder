@@ -35,7 +35,7 @@ final class RemindServiceTests: XCTestCase {
             category: RemindDataTest.category,
             priority: RemindDataTest.priority,
             notificationInterval: RemindDataTest.notificationInterval,
-            createdAt: RemindDataTest.createdAt
+            createdAt: .now
         )
         var publishedReminds: [Remind] = []
         var newRemind: Remind?

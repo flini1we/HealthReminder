@@ -12,7 +12,7 @@ final class NotificationRequestFactoryTests: XCTestCase {
             category: RemindDataTest.category,
             priority: RemindDataTest.priority,
             notificationInterval: RemindDataTest.notificationInterval,
-            createdAt: RemindDataTest.createdAt
+            createdAt: .now
         )
         factory.createRemindNotificationRequest(from: remind)
 
