@@ -7,7 +7,7 @@ struct Remind: Identifiable, Hashable, Codable {
     var category: RemindType
     var priority: RemindsPriority
     var notificationInterval: Int
-    var createdAt: String
+    var createdAt: Date
     
     static func getEmpty() -> Self {
         .init(
@@ -15,7 +15,7 @@ struct Remind: Identifiable, Hashable, Codable {
             category: .breathing,
             priority: .general,
             notificationInterval: 0,
-            createdAt: ""
+            createdAt: .now
         )
     }
     
@@ -35,7 +35,7 @@ struct Remind: Identifiable, Hashable, Codable {
         self.notificationInterval = interval
     }
     
-    mutating func setCreatedAt(_ createdAt: String) {
+    mutating func setCreatedAt(_ createdAt: Date) {
         self.createdAt = createdAt
     }
     

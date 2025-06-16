@@ -39,7 +39,8 @@ private extension DeepLinkManager {
             let priority = RemindsPriority(rawValue: priorityValue),
             let intervalString = queryItems.first(where: { $0.name == "notificationInterval" })?.value,
             let interval = Int(intervalString),
-            let createdAt = queryItems.first(where: { $0.name == "createdAt" })?.value
+            let createdAtString = components.queryItems?.first(where: { $0.name == "createdAt" })?.value,
+            let timestamp = TimeInterval(createdAtString)
         else {
             return nil
         }
@@ -48,7 +49,7 @@ private extension DeepLinkManager {
             category: category,
             priority: priority,
             notificationInterval: interval,
-            createdAt: createdAt
+            createdAt: Date(timeIntervalSince1970: timestamp)
         )
     }
 }

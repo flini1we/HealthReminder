@@ -128,7 +128,7 @@ final class RemindCell: UITableViewCell {
         iconImageView.image = UIImage(systemName: remind.category.systemIcon)
         categoryLabel.text = remind.category.displayName
         titleLabel.text = remind.title
-        dateLabel.text = remind.createdAt
+        dateLabel.text = DateFormatter.standard.formatRelative(remind.createdAt)
         
         priorityBadge.text = remind.priority.rawValue
         priorityBadge.backgroundColor = remind.priority.color.withAlphaComponent(0.1)

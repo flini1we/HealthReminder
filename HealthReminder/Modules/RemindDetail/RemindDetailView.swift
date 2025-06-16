@@ -45,7 +45,7 @@ struct RemindDetailView: View {
                     animatedInfoRow(
                         icon: .calendarImage,
                         title: .calendarTitle,
-                        value: remind.createdAt,
+                        value: DateFormatter.standard.formatRelative(remind.createdAt),
                         delay: usingAnimation ? 0.5 : 0
                     )
                 }

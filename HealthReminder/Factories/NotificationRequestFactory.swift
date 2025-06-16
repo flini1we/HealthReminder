@@ -31,6 +31,12 @@ final class NotificationRequestFactory: INotificationRequestFactory {
             .categoryIdentifier(remind.category.rawValue)
             .badge(prevValue + 1)
             .build()
+        
+        let repeatingNotificationTrigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: TimeInterval(3600 * remind.notificationInterval),
+            repeats: true
+        )
+        
         do {
             let remindData = try jsonEncoder.encode(remind)
             let remindDataDict = try JSONSerialization.jsonObject(with: remindData) as? [String: Any]
@@ -40,13 +46,20 @@ final class NotificationRequestFactory: INotificationRequestFactory {
             fatalError("")
         }
         
-        let request = UNNotificationRequest(
+        let repeatingRequest = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: notificationContent,
+            trigger: repeatingNotificationTrigger
+        )
+        
+        let currentleRequest = UNNotificationRequest(
             identifier: UUID().uuidString,
             content: notificationContent,
             trigger: nil
         )
         
-        notificationService.presetnNotificationRequest(request)
+        notificationService.presetnNotificationRequest(currentleRequest)
+        notificationService.presetnNotificationRequest(repeatingRequest)
     }
 }
 

@@ -97,25 +97,21 @@ final class DateFormatter: IDateFormatter {
         let calendar = Calendar.current
         let now = Date()
         
-        // If date is within next 24 hours
         if let hours = calendar.dateComponents([.hour], from: now, to: date).hour,
            hours >= 0 && hours < 24 {
             return timeAgo(from: date)
         }
         
-        // If date is within this week
         if let days = calendar.dateComponents([.day], from: now, to: date).day,
            days >= -7 && days <= 7 {
             return formatRelative(date)
         }
         
-        // If date is within this year
         if calendar.component(.year, from: date) == calendar.component(.year, from: now) {
             dateFormatter.dateFormat = "MMM d 'at' h:mm a"
             return dateFormatter.string(from: date)
         }
         
-        // Default to long format for dates far in the past or future
         return formatLong(date)
     }
 }

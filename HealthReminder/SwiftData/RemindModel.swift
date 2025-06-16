@@ -1,4 +1,5 @@
 import SwiftData
+import Foundation
 
 @Model
 class RemindModel: Identifiable {
@@ -7,9 +8,9 @@ class RemindModel: Identifiable {
     var category: RemindType
     var priority: RemindsPriority
     var notificationInterval: Int
-    var createdAt: String
+    var createdAt: Date
     
-    init(title: String, category: RemindType, priority: RemindsPriority, notificationInterval: Int, createdAt: String) {
+    init(title: String, category: RemindType, priority: RemindsPriority, notificationInterval: Int, createdAt: Date) {
         self.title = title
         self.category = category
         self.priority = priority

@@ -31,7 +31,7 @@ final class RemindBuilder {
         return self
     }
     
-    func createdAt(_ created: String) -> Self {
+    func createdAt(_ created: Date) -> Self {
         remind.setCreatedAt(created)
         return self
     }

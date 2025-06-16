@@ -24,13 +24,12 @@ final class CreateRemindViewModel: ICreateRemindViewModel {
     }
     
     func buildRemind() -> Remind {
-        let formattedDate = DateFormatter.standard.formatRelative(.now)
         return RemindBuilder()
             .title(remindTitle)
             .category(selectedType)
             .notificationInterval(interval)
             .priority(remindPriority)
-            .createdAt(formattedDate)
+            .createdAt(.now)
             .build()
     }
 }
