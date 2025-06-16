@@ -1,27 +1,10 @@
 # Health Reminder
 
+<div align="center">
+  <img src="./imagesAndGifs/images/ChatGPT Image 14 июн. 2025 г., 23_48_57.png" width="200"/>
+</div>
+
 A modern iOS application for managing health-related reminders, built with UIKit, SwiftUI, and following clean architecture principles.
-
-## GitHub Topics
-
-```
-swift
-ios
-swiftui
-uikit
-viper
-combine
-swiftdata
-health
-reminders
-notifications
-local-notifications
-deeplink
-clean-architecture
-service-locator
-builder-pattern
-factory-pattern
-```
 
 ## Features
 
@@ -32,6 +15,8 @@ factory-pattern
 - 🔗 Deep linking support
 - 📊 Detailed reminder information
 - 🎨 Modern UI with UIKit and SwiftUI integration
+
+<img src="./imagesAndGifs/gifs/Simulator-Screen-Recording-iPhone-16-Pro-2025-06-16-at-01.44.22.gif" alt="screencast" width="400" />
 
 ## Technical Stack
 
@@ -115,6 +100,27 @@ The project includes comprehensive testing:
 - iOS 17.0+
 - Xcode 14.0+
 - Swift 5.0+
+
+## GitHub Topics
+
+```
+swift
+ios
+swiftui
+uikit
+viper
+combine
+swiftdata
+health
+reminders
+notifications
+local-notifications
+deeplink
+clean-architecture
+service-locator
+builder-pattern
+factory-pattern
+```
 
 ## Author
 
